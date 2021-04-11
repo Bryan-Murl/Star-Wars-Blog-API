@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Character, Planet
 #from models import Person
 
 app = Flask(__name__)
@@ -38,6 +38,55 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@app.route('/user/<int:id>', methods=['GET'])
+def get_people(id):
+
+    return jsonify({"msg": id}), 200
+
+@app.route('/all_characters', methods=['GET'])
+def get_all_characters():
+
+    # get all the people
+   character_query  = Character.query.all()
+
+    # map the results and your list of people  inside of the all_people variable
+    all_characters = list(map(lambda x: x.serialize(), character_query))
+
+    return jsonify(all_characters), 200
+    
+@app.route('/characters/<int:id>', methods=['GET'])
+def get_character_id(id):
+
+    # get only the ones id
+    character_query = Character.query.filter_by(id=id)
+
+    # map the results and your list of people  inside of the all_people variable
+    all_characters = list(map(lambda x: x.serialize(), character_query))
+
+    return jsonify(all_characters), 200
+
+@app.route('/all_planets', methods=['GET'])
+def get_all_planets():
+
+    # get all the people
+    planet_query = Planet.query.all()
+
+    # map the results and your list of people  inside of the all_people variable
+    all_planets = list(map(lambda x: x.serialize(), planet_query))
+
+    return jsonify(all_planets), 200
+
+@app.route('/planets/<int:id>', methods=['GET'])
+def get_planet_id(id):
+
+    # get only the ones id
+    planet_query = Planet.query.filter_by(id=id)
+
+    # map the results and your list of people  inside of the all_people variable
+    all_planets = list(map(lambda x: x.serialize(), planet_query))
+
+    return jsonify(all_planets), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
